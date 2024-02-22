@@ -13,10 +13,23 @@ const thoughtSchema = new mongoose.Schema({
         default:Date.now
     },
     username:{ 
-        type: userSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true
      },
-    friends: [{ type: reactionSchema }]
+    reactions: [{ 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Reaction' }]
+},
+{
+  toJSON: {
+    virtuals: true,
+  },
+  id: false,
+});
+
+thoughtSchema.virtual("reactionCount").get(() => {
+    return this.reaction.length;
 });
 
 const reactionSchema = new mongoose.Schema({
@@ -29,7 +42,8 @@ const reactionSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 280,
         username:{ 
-            type: userSchema,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             required: true
         },
     },
@@ -39,5 +53,6 @@ const reactionSchema = new mongoose.Schema({
     }
 });
 
-const User = mongoose.model("Thought", thoughtSchema);
-module.exports = User;
+const Thought = mongoose.model("Thought", thoughtSchema);
+const Reaction = mongoose.model("Reaction", reactionSchema);
+module.exports = Thought;

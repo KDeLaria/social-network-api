@@ -92,8 +92,8 @@ module.exports = {
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.reactionId },
                     { $set: thought },
-                    { runValidators: true, new: true });
-            res.json(thought);
+                    { new: true });
+            res.json(reaction);
         } catch (err) {
             console.log(err);
             return res.status(500).json(err);
@@ -114,8 +114,8 @@ module.exports = {
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.thoughtId },
                     { $set: thought },
-                    { runValidators: true, new: true });
-            res.json(thought);
+                    { new: true });
+            res.json(reaction);
             //res.json({ message: 'thought deleted!' });
         } catch (err) {
             res.status(500).json(err);

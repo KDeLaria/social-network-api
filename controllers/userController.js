@@ -77,7 +77,7 @@ module.exports = {
 
 
     // Create a friend
-    async createUser(req, res) {
+    async createFriend(req, res) {
         try {
             const user = await User.findOne({ _id: req.params.userId })
                 .select('-__v')
@@ -92,15 +92,15 @@ module.exports = {
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
                     { $set: user },
-                    { runValidators: true, new: true });
-            res.json(user);
+                    { new: true });
+            res.json(friend);
         } catch (err) {
             console.log(err);
             return res.status(500).json(err);
         }
     },
     // Delete a friend
-    async deleteUser(req, res) {
+    async deleteFriend(req, res) {
         try {
             const user = await User.findOne({ _id: req.params.userId })
             .select('-__v')
@@ -114,8 +114,8 @@ module.exports = {
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
                     { $set: user },
-                    { runValidators: true, new: true });
-            res.json(user);
+                    { new: true });
+            res.json(friend);
             //res.json({ message: 'Friend deleted!' });
         } catch (err) {
             res.status(500).json(err);
