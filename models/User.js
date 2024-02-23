@@ -32,11 +32,13 @@ const userSchema = new mongoose.Schema({
         id: false,
     });
 
-userSchema.virtual("friendCount").get(() => {
-   return (this.friends)? this.friends.length : 0;
+
+userSchema.virtual("friendCount").get( () => {
+    //return await userSchema.aggregate([{$project:{friends:{$size:"$friends"}}}]);
+   return (this.friends)? this.friends.$size : 0;
 });
 
 
-
 const User = mongoose.model("User", userSchema);
+
 module.exports = User;
