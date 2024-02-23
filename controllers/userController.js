@@ -87,7 +87,7 @@ module.exports = {
                     return res.status(404).json({ message: 'No user with that ID' });
                 }
                 
-                user.friends.push(req.body);
+                user.friends.push(req.params.friendId);
 
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
@@ -109,7 +109,7 @@ module.exports = {
             if (!user) {
                 return res.status(404).json({ message: 'No user with that ID' });
             }
-            user.friends.splice(user.friends[user.friends.indexOf(req.params.friendsId)], 1);
+            user.friends.splice(user.friends[user.friends.indexOf(req.params.friendId)], 1);
 
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },

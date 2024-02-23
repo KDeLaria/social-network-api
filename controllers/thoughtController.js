@@ -1,4 +1,5 @@
 const { User, Thought } = require('../models');
+const Reaction = require("../models/Reaction");
 
 module.exports = {
     // Get all thoughts
@@ -88,12 +89,15 @@ module.exports = {
                 }
                 
                 thought.reactions.push(req.body);
-
+                // const react = await Reaction.create(req.body);
                 const reaction = await Thought.findOneAndUpdate(
-                    { _id: req.params.reactionId },
+                    { _id: req.params.thoughtId },
                     { $set: thought },
                     { new: true });
-            res.json(reaction);
+
+                
+
+            res.json(react);
         } catch (err) {
             console.log(err);
             return res.status(500).json(err);
@@ -109,7 +113,7 @@ module.exports = {
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
-            thought.reaction.splice(thought.reaction[thought.reaction.indexOf(req.params.thoughtId)], 1);
+            thought.reactions.splice(thought.reactions[thought.reactions.indexOf(req.params.thoughtId)], 1);
 
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.thoughtId },
