@@ -57,8 +57,7 @@ module.exports = {
             const user = await User.findOneAndUpdate(
                 { _id: req.params.userId },
                 { $set: req.body },
-                { runValidators: true, new: true }
-            );
+                { runValidators: true, new: true });
 
             if (!user) {
                 return res.status(404).json({ message: 'No user with this id!' });
@@ -79,19 +78,15 @@ module.exports = {
     // Create a friend
     async createFriend(req, res) {
         try {
-            const user = await User.findOne({ _id: req.params.userId })
-                .select('-__v')
-                .populate('friends');
+            const user = await User.findOne({ _id: req.body });
                 
                 if (!user) {
                     return res.status(404).json({ message: 'No user with that ID' });
                 }
-                
-                user.friends.push(req.params.friendId);
 
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
-                    { $set: user },
+                    { $addToSet: { friends: req.body } },
                     { new: true });
             res.json(friend);
         } catch (err) {
@@ -102,17 +97,15 @@ module.exports = {
     // Delete a friend
     async deleteFriend(req, res) {
         try {
-            const user = await User.findOne({ _id: req.params.userId })
-            .select('-__v')
-            .populate('friends');
+            const user = await User.findOne({ _id: req.body });
 
             if (!user) {
                 return res.status(404).json({ message: 'No user with that ID' });
             }
-            user.friends.splice(user.friends[user.friends.indexOf(req.params.friendId)], 1);
 
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
+                    { $addToSet: { friends: req.params.friendId } },
                     { $set: user },
                     { new: true });
             res.json(friend);

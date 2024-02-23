@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
+
 const reactionSchema = new mongoose.Schema({
-    reactionId: {
+    /*reactionId: {
         type: mongoose.Schema.Types.ObjectId,
         default: new mongoose.Schema.Types.ObjectId
-    },
+    },*/
     username:{ 
         type: String,
         ref: 'User',

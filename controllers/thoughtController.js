@@ -14,9 +14,7 @@ module.exports = {
     // Get a thought
     async getSingleThought(req, res) {
         try {
-            const thought = await Thought.findOne({ _id: req.params.thoughtId })
-                .select('-__v')
-                .populate('reactions');
+            const thought = await Thought.findOne({ _id: req.params.thoughtId });
 
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
@@ -88,36 +86,28 @@ module.exports = {
                     return res.status(404).json({ message: 'No thought with that ID' });
                 }
                 
-                thought.reactions.push(req.body);
-                // const react = await Reaction.create(req.body);
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.thoughtId },
-                    { $set: thought },
+                    { $addToSet: { reactions: req.body } },
                     { new: true });
-
-                
-
-            res.json(react);
+                    
+            res.json(reaction);
         } catch (err) {
-            console.log(err);
-            return res.status(500).json(err);
+            console.log(err.message);
+            return res.status(500).json(err.message);
         }
     },
     // Delete a reaction
     async deleteReaction(req, res) {
         try {
-            const thought = await Thought.findOne({ _id: req.params.thoughtId })
-            .select('-__v')
-            .populate('reaction');
+            const thought = await Thought.findOne({ _id: req.params.thoughtId });
 
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
-            thought.reactions.splice(thought.reactions[thought.reactions.indexOf(req.params.thoughtId)], 1);
-
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.thoughtId },
-                    { $set: thought },
+                    { $pull: { reactions: { _id: req.params.reactionId} } },
                     { new: true });
             res.json(reaction);
             //res.json({ message: 'thought deleted!' });
