@@ -78,7 +78,7 @@ module.exports = {
     // Create a friend
     async createFriend(req, res) {
         try {
-            const user = await User.findOne({ _id: req.body });
+            const user = await User.findOne({ _id: req.params.friendId });
                 
                 if (!user) {
                     return res.status(404).json({ message: 'No user with that ID' });
@@ -86,7 +86,7 @@ module.exports = {
 
                 const friend = await User.findOneAndUpdate(
                     { _id: req.params.userId },
-                    { $addToSet: { friends: req.body } },
+                    { $addToSet: { friends: req.params.friendId } },
                     { new: true });
             res.json(friend);
         } catch (err) {
@@ -97,7 +97,7 @@ module.exports = {
     // Delete a friend
     async deleteFriend(req, res) {
         try {
-            const user = await User.findOne({ _id: req.body });
+            const user = await User.findOne({ _id: req.params.friendId });
 
             if (!user) {
                 return res.status(404).json({ message: 'No user with that ID' });
