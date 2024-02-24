@@ -19,6 +19,7 @@ module.exports = {
             if (!thought) {
                 return res.status(404).json({ message: 'No thought with that ID' });
             }
+            console.log(`reaction length: ${thought.reactions.length}`);
 
             res.json(thought);
         } catch (err) {
@@ -78,9 +79,7 @@ module.exports = {
     // Create a reaction
     async createReaction(req, res) {
         try {
-            const thought = await Thought.findOne({ _id: req.params.thoughtId })
-                .select('-__v')
-                .populate('reactions');
+            const thought = await Thought.findOne({ _id: req.params.thoughtId });
                 
                 if (!thought) {
                     return res.status(404).json({ message: 'No thought with that ID' });
@@ -88,8 +87,9 @@ module.exports = {
                 
                 const reaction = await Thought.findOneAndUpdate(
                     { _id: req.params.thoughtId },
-                    { $addToSet: { reactions: req.body } },
+                    { $addToSet: { reactions: {...req.body, thoughtId:req.params.thoughtId }}},
                     { new: true });
+                    console.log(`reaction length: ${thought.reactions.length}`);
                     
             res.json(reaction);
         } catch (err) {

@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     },
     thoughts: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'thought'
+        ref: 'Thought'
     }],
     friends: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -33,9 +33,9 @@ const userSchema = new mongoose.Schema({
     });
 
 
-userSchema.virtual("friendCount").get( () => {
+userSchema.virtual("friendCount").get(() => {
     //return await userSchema.aggregate([{$project:{friends:{$size:"$friends"}}}]);
-   return (this.friends)? this.friends.$size : 0;
+    return (this.friends) ? this.friends.length : 0;
 });
 
 
